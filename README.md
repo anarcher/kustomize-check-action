@@ -1,0 +1,1 @@
+# kustomize-lint-action

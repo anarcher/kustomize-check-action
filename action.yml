@@ -1,0 +1,13 @@
+name: kustomize-check
+author: anarcher@gmail.com
+description: 'Github action for kustomize checking.'
+branding: 
+  icon: 'anchor'
+  color: 'blue'
+inputs:
+  paths:
+    required: false
+    description: 'Paths to check (optional)'
+runs:
+  using: 'docker'
+  image: 'docker://anarcher/kustomize-check-action:master'

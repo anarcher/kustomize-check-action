@@ -17,6 +17,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Println("GITHUB_SHA:", cfg.GitHub.Commit)
+	dir, _ := os.Getwd()
+	fmt.Println("CWD:", dir)
+
 	base := ""
 	cmd := command.NewOSExec()
 

@@ -1,1 +1,1 @@
-# kustomize-lint-action
+# kustomize-check-action

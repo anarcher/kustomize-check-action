@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/anarcher/kustomize-check-action/pkg/checker"
 	"github.com/anarcher/kustomize-check-action/pkg/command"
@@ -20,11 +22,14 @@ func main() {
 
 	f, err := finder.NewGitChanged(base, cfg, cmd)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("err: %s\n", err)
+		os.Exit(1)
 	}
 
 	checker := checker.NewKustBuildAndEval(cfg, f, cmd)
 	if err := checker.Check(); err != nil {
-		log.Fatal(err)
+		fmt.Printf("err: %s\n", err)
+		os.Exit(1)
 	}
+	fmt.Println("OK")
 }

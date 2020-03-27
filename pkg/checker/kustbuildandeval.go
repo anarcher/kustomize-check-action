@@ -40,7 +40,6 @@ func (k *KustBuildAndEval) Check() error {
 		fmt.Printf("PATH: %s\n", p)
 		fmt.Println("CMD:", fmt.Sprintf(kustBuildAndEvalCmdFmt, p))
 		_, err := k.cmd.Run("bash", "-c", fmt.Sprintf(kustBuildAndEvalCmdFmt, p))
-		fmt.Println("err::::", err)
 		if err != nil {
 			return err
 		}

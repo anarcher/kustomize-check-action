@@ -16,7 +16,8 @@ type GitHub struct {
 }
 
 type Inputs struct {
-	Paths []string `env:"INPUT_PATHS" envSeparator:"\n"`
+	Paths        []string `env:"INPUT_PATHS" envSeparator:"\n"`
+	CommitBefore string   `env:"INPUT_GITHUB_SHA_BEFORE"`
 }
 
 type Config struct {

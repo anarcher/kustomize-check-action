@@ -17,7 +17,7 @@ type GitChanged struct {
 }
 
 const (
-	gitDiffTreeFmt    = "diff-tree --no-commit-id --name-only -r %s"
+	gitDiffTreeFmt    = "diff-tree --no-commit-id --name-only -r %s %s"
 	kustomizeFileName = "kustomization.yaml"
 )
 
@@ -51,7 +51,8 @@ func (f *GitChanged) PathFind() ([]string, error) {
 
 func (f *GitChanged) gitDiffTree() ([]string, error) {
 	cmt := f.cfg.GitHub.Commit
-	args := fmt.Sprintf(gitDiffTreeFmt, cmt)
+	cmtBefore := f.cfg.Inputs.CommitBefore
+	args := fmt.Sprintf(gitDiffTreeFmt, cmt, cmtBefore)
 
 	out, err := f.cmd.Run("git", strings.Split(args, " ")...)
 	if err != nil {

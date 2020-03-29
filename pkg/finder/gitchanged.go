@@ -17,7 +17,7 @@ type GitChanged struct {
 }
 
 const (
-	gitDiffTreeFmt    = "diff-tree --no-commit-id --name-only -r %s %s"
+	gitDiffTreeFmt    = "diff-tree --no-commit-id --name-only -r HEAD HEAD~%d"
 	kustomizeFileName = "kustomization.yaml"
 )
 
@@ -50,9 +50,8 @@ func (f *GitChanged) PathFind() ([]string, error) {
 }
 
 func (f *GitChanged) gitDiffTree() ([]string, error) {
-	cmt := f.cfg.GitHub.Commit
-	cmtBefore := f.cfg.Inputs.CommitBefore
-	args := fmt.Sprintf(gitDiffTreeFmt, cmt, cmtBefore)
+	commits := f.cfg.GithubEvent.TotalCommits()
+	args := fmt.Sprintf(gitDiffTreeFmt, commits)
 
 	out, err := f.cmd.Run("git", strings.Split(args, " ")...)
 	if err != nil {
@@ -102,16 +101,12 @@ func (f *GitChanged) matchPaths(paths []string) ([]string, error) {
 
 	for _, p := range paths {
 		for _, pat := range patterns {
-			matched, err := filepath.Match(pat, p)
-			if err != nil {
-				return nil, err
-			}
+			matched := strings.HasPrefix(p, pat)
 			if matched {
 				ps = append(ps, p)
 				break
 			}
 		}
 	}
-
 	return ps, nil
 }

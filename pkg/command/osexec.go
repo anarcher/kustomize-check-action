@@ -2,10 +2,11 @@ package command
 
 import (
 	"bytes"
-	"io"
-	"log"
-	"os"
+	"fmt"
 	"os/exec"
+	"strings"
+
+	au "github.com/logrusorgru/aurora"
 )
 
 type OSExec struct {
@@ -26,14 +27,12 @@ func (e *OSExec) Run(name string, args ...string) (string, error) {
 	err := cmd.Run()
 	out := e.out.String()
 
-	{
-		if _, err := io.Copy(os.Stdout, &e.out); err != nil {
-			log.Print(err)
-		}
-		if _, err := io.Copy(os.Stderr, &e.err); err != nil {
-			log.Print(err)
-		}
-	}
+	fmt.Println(au.Cyan("CMD:"), au.Gray(8-1, fmt.Sprintf("%s %s", name, strings.Join(args, " "))))
+	fmt.Println(au.Gray(8-1, e.out.String()).BgGray(4 - 1))
+	fmt.Println(au.Red(e.err.String()))
+
+	e.out.Reset()
+	e.err.Reset()
 
 	return out, err
 }

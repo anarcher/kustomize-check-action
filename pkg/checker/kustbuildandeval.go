@@ -6,10 +6,12 @@ import (
 	"github.com/anarcher/kustomize-check-action/pkg/command"
 	"github.com/anarcher/kustomize-check-action/pkg/config"
 	"github.com/anarcher/kustomize-check-action/pkg/finder"
+
+	au "github.com/logrusorgru/aurora"
 )
 
 const (
-	kustBuildAndEvalCmdFmt = "set -o pipefail ; kustomize build %s | kubeval --ignore-missing-schemas "
+	kustBuildAndEvalCmdFmt = "set -o pipefail ; kustomize build %s | kubeval --ignore-missing-schemas  --force-color "
 )
 
 type KustBuildAndEval struct {
@@ -37,8 +39,7 @@ func (k *KustBuildAndEval) Check() error {
 		return nil
 	}
 	for _, p := range paths {
-		fmt.Printf("PATH: %s\n", p)
-		fmt.Println("CMD:", fmt.Sprintf(kustBuildAndEvalCmdFmt, p))
+		fmt.Println(au.Sprintf(au.Cyan("PATH: %s"), au.Blue(p)))
 		_, err := k.cmd.Run("bash", "-c", fmt.Sprintf(kustBuildAndEvalCmdFmt, p))
 		if err != nil {
 			return err

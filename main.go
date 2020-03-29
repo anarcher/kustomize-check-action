@@ -9,6 +9,8 @@ import (
 	"github.com/anarcher/kustomize-check-action/pkg/command"
 	"github.com/anarcher/kustomize-check-action/pkg/config"
 	"github.com/anarcher/kustomize-check-action/pkg/finder"
+
+	au "github.com/logrusorgru/aurora"
 )
 
 func main() {
@@ -17,23 +19,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("GITHUB_SHA:", cfg.GitHub.Commit)
-	dir, _ := os.Getwd()
-	fmt.Println("CWD:", dir)
+	cfg.Print()
 
 	base := ""
 	cmd := command.NewOSExec()
 
 	f, err := finder.NewGitChanged(base, cfg, cmd)
 	if err != nil {
-		fmt.Printf("err: %s\n", err)
+		fmt.Println(au.Sprintf(au.Red("FAIL: %s"), au.Yellow(err)))
 		os.Exit(1)
 	}
 
 	checker := checker.NewKustBuildAndEval(cfg, f, cmd)
 	if err := checker.Check(); err != nil {
-		fmt.Printf("err: %s\n", err)
+		fmt.Println(au.Sprintf(au.Red("FAIL: %s"), au.Yellow(err)))
 		os.Exit(1)
 	}
-	fmt.Println("OK")
+	fmt.Println(au.Green("OK"))
 }
